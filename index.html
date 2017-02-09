@@ -5,6 +5,7 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
 	<link rel="stylesheet" type="text/css" href="style.css">
+	<link href="https://fonts.googleapis.com/css?family=Arimo" rel="stylesheet">
 	<title>Lab 2 - Weather App</title>
 </head>
 
@@ -19,10 +20,10 @@
 			<h1 id="current_condition"></h1>
 			<div id="wind_humid">
 				<div id="wind">
-					<div id="wind_ico"></div>
+					<div id="wind_ico" title="Wind Speed"></div>
 					<h3 id="wind_spe"></h3> </div>
 				<div id="humidity">
-					<div id="humid_ico"></div>
+					<div id="humid_ico" title="Humidity"></div>
 					<h3 id="humid"></h3> </div>
 			</div>
 			<section class="forecast_container">
@@ -84,7 +85,7 @@
 				if (raw.readyState === 4 && raw.status == "200") {
 					if (b == 1) {
 						data = JSON.parse(raw.responseText);
-						//						document.getElementById('api_w').innerHTML = JSON.stringify(data); // reload();
+						console.log(data);
 						reload();
 					}
 					else if (b == 0) {
@@ -107,14 +108,15 @@
 			//Current Condition
 			elem = document.getElementById('current_condition');
 			var weather = data['weather'][0].main;
-			//Current Icon
 			elem.innerHTML = weather;
+			//Current Icon
 			elem = document.getElementById('current_icon').childNodes[1];
+			elem.title = data['weather'][0].description;
 			icon(elem, weather);
 			//Current Temperature
 			elem = document.getElementById('temperature');
 			var temp = data['main']['temp'];
-			elem.innerHTML = temp.toFixed(1);
+			elem.innerHTML = convert(temp);
 			//Wind Speed and Humidity
 			elem = document.getElementById('wind_spe');
 			elem.innerHTML = data['wind']['speed'] + 'm/s';
@@ -136,9 +138,10 @@
 					var f = fore.list[i + 1];
 				}
 				icon(ico, f.weather[0].main);
+				ico.title = f.weather[0].description;
 				day.innerHTML = getDate(f.dt);
-				max.innerHTML = f.temp.max.toFixed(1);
-				min.innerHTML = f.temp.min.toFixed(1);
+				max.innerHTML = convert(f.temp.max);
+				min.innerHTML = convert(f.temp.min);
 			}
 		}
 
@@ -235,13 +238,14 @@
 		}
 
 		function convert(temp) {
-			if (degree == 'c') {
-				temp = temp - 273.15;
+			var re;
+			if (units == '&units=metric') {
+				re = temp.toFixed(1) + '&#8451;';
 			}
 			else {
-				temp = (temp * 9 / 5) - 459.67;
+				re = temp.toFixed(1) + '&#8457;';
 			}
-			return temp.toFixed(1);
+			return re;
 		}
 
 		function search(key) {
@@ -249,7 +253,7 @@
 				var cur_loc = document.getElementById('current_location');
 				city = cur_loc.value;
 				console.log(city);
-				cur_loc.placeholder = city;
+				cur_loc.placeholder = city.charAt(0).toUpperCase() + city.slice(1);
 				cur_loc.value = "";
 				cur_loc.blur();
 				load();
