@@ -9,42 +9,45 @@
 </head>
 
 <body>
-	<nav onclick="changeUnit();"></nav>
+	<nav id="units" onclick="changeUnit();">Celsius</nav>
 	<main>
 		<section class="widget">
-			<h2 id="current_location"></h2>
+			<input type="text" name="loc" id="current_location" placeholder="Toronto" onkeydown="search(this)">
 			<div id="current_icon">
-				<div></div>
+				<div class="cur_i"></div>
 				<h3 id="temperature"></h3> </div>
 			<h1 id="current_condition"></h1>
 			<div id="wind_humid">
 				<div id="wind">
 					<div id="wind_ico"></div>
 					<h3 id="wind_spe"></h3> </div>
-				<h3 id="humid"></h3> </div>
+				<div id="humidity">
+					<div id="humid_ico"></div>
+					<h3 id="humid"></h3> </div>
+			</div>
 			<section class="forecast_container">
 				<section class="card" id="0">
-					<div id="card_icon"></div>
+					<div class="ci" id="card_icon"></div>
 					<h3 id="day"></h3>
 					<h3 id="max"></h3>
 					<h3 id="min"></h3></section>
 				<section class="card" id="1">
-					<div id="card_icon"></div>
+					<div class="ci" id="card_icon"></div>
 					<h3 id="day"></h3>
 					<h3 id="max"></h3>
 					<h3 id="min"></h3></section>
 				<section class="card" id="2">
-					<div id="card_icon"></div>
+					<div class="ci" id="card_icon"></div>
 					<h3 id="day"></h3>
 					<h3 id="max"></h3>
 					<h3 id="min"></h3></section>
 				<section class="card" id="3">
-					<div id="card_icon"></div>
+					<div class="ci" id="card_icon"></div>
 					<h3 id="day"></h3>
 					<h3 id="max"></h3>
 					<h3 id="min"></h3></section>
 				<section class="card" id="4">
-					<div id="card_icon"></div>
+					<div class="ci" id="card_icon"></div>
 					<h3 id="day"></h3>
 					<h3 id="max"></h3>
 					<h3 id="min"></h3></section>
@@ -94,7 +97,7 @@
 					}
 				}
 			}
-			raw.send(null);
+			raw.send();
 		}
 
 		function reload() {
@@ -111,10 +114,10 @@
 			//Current Temperature
 			elem = document.getElementById('temperature');
 			var temp = data['main']['temp'];
-			elem.innerHTML = temp.toFixed(2);
+			elem.innerHTML = temp.toFixed(1);
 			//Wind Speed and Humidity
 			elem = document.getElementById('wind_spe');
-			elem.innerHTML = data['wind']['speed'];
+			elem.innerHTML = data['wind']['speed'] + 'm/s';
 			elem = document.getElementById('humid');
 			elem.innerHTML = data['main']['humidity'] + "%";
 		}
@@ -134,8 +137,8 @@
 				}
 				icon(ico, f.weather[0].main);
 				day.innerHTML = getDate(f.dt);
-				max.innerHTML = f.temp.max.toFixed(2);
-				min.innerHTML = f.temp.min.toFixed(2);
+				max.innerHTML = f.temp.max.toFixed(1);
+				min.innerHTML = f.temp.min.toFixed(1);
 			}
 		}
 
@@ -145,7 +148,6 @@
 			var size = 45;
 			var max;
 			var min;
-			var margin = 5;
 			var sect;
 			var step = 1;
 			for (var i = 0; i < hourly.list.length; i++) {
@@ -167,7 +169,7 @@
 			sect = arrx.length;
 			yS = (canvas.height - size) / (max - min);
 			xS = (canvas.width - size) / sect;
-			context.strokeStyle = "#444444";
+			context.strokeStyle = "#dddddd";
 			context.beginPath();
 			context.setLineDash([5, 10]);
 			context.font = '10pt Verdana';
@@ -196,11 +198,14 @@
 		}
 
 		function changeUnit() {
+			var e = document.getElementById('units');
 			if (units == '&units=metric') {
 				units = '&units=imperial';
+				e.innerHTML = 'Fahrenheit';
 			}
 			else {
 				units = '&units=metric';
+				e.innerHTML = 'Celsius';
 			}
 			console.log('click ' + units);
 			load();
@@ -236,7 +241,19 @@
 			else {
 				temp = (temp * 9 / 5) - 459.67;
 			}
-			return temp.toFixed(2);
+			return temp.toFixed(1);
+		}
+
+		function search(key) {
+			if (event.keyCode == 13) {
+				var cur_loc = document.getElementById('current_location');
+				city = cur_loc.value;
+				console.log(city);
+				cur_loc.placeholder = city;
+				cur_loc.value = "";
+				cur_loc.blur();
+				load();
+			}
 		}
 	</script>
 </body>
