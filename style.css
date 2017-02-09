@@ -6,6 +6,7 @@ body {
 	background-repeat: no-repeat;
 	background-size: cover;
 	color: white;
+	height: 100%;
 }
 
 h1,
@@ -21,7 +22,11 @@ nav {
 }
 
 main {
-	height: 150vh;
+	height: 100vh;
+}
+
+section {
+	margin-top: 5vw;
 }
 
 #current_icon {
@@ -41,7 +46,7 @@ main {
 
 .forecast_container {
 	width: 100%;
-	height: 50vw;
+	height: 55vw;
 	white-space: nowrap;
 	overflow-x: auto;
 	overflow-y: hidden;
@@ -49,12 +54,18 @@ main {
 
 .card {
 	display: inline-block;
-	height: 100%;
 	width: 22vw;
+	height: 100%;
 }
 
 #temperature {
 	transform: translate(20vw, -18vw);
+}
+
+.weather_graph {
+	margin-top: 15vw;
+	width: 100%;
+	height: 50vw;
 }
 
 #thunderstorm {
