@@ -1,0 +1,114 @@
+body {
+	margin: 0;
+	padding: 0;
+	overflow: hidden;
+	background-image: url(blur.jpg);
+	background-repeat: no-repeat;
+	background-size: cover;
+	color: white;
+}
+
+h1,
+h2,
+h3 {
+	text-align: center;
+	opacity: 0.7;
+}
+
+nav {
+	height: 10vw;
+	background-color: black;
+}
+
+main {
+	height: 150vh;
+}
+
+#current_icon {
+	height: 15vw;
+}
+
+#wind {
+	height: 20vw;
+}
+
+#wind_ico {
+	height: 60px;
+	width: 60px;
+	background: url('Climacons.png') -360px -240px;
+	filter: invert(100%);
+}
+
+.forecast_container {
+	width: 100%;
+	height: 50vw;
+	white-space: nowrap;
+	overflow-x: auto;
+	overflow-y: hidden;
+}
+
+.card {
+	display: inline-block;
+	height: 100%;
+	width: 22vw;
+}
+
+#temperature {
+	transform: translate(20vw, -18vw);
+}
+
+#thunderstorm {
+	height: 60px;
+	width: 60px;
+	background: url('Climacons.png') -615px -240px;
+	filter: invert(100%);
+}
+
+#drizzle {
+	height: 60px;
+	width: 60px;
+	background: url('Climacons.png') -552px -45px;
+	filter: invert(100%);
+}
+
+#rain {
+	height: 60px;
+	width: 60px;
+	background: url('Climacons.png') -360px -45px;
+	filter: invert(100%);
+}
+
+#snow {
+	height: 60px;
+	width: 60px;
+	background: url('Climacons.png') -425px -175px;
+	filter: invert(100%);
+}
+
+#atmosphere {
+	height: 60px;
+	width: 60px;
+	background: url('Climacons.png') -615px -180px;
+	filter: invert(100%);
+}
+
+#clear {
+	height: 60px;
+	width: 60px;
+	background: url('Climacons.png') -170px -305px;
+	filter: invert(100%);
+}
+
+#clouds {
+	height: 60px;
+	width: 60px;
+	background: url('Climacons.png') -105px -50px;
+	filter: invert(100%);
+}
+
+#misc {
+	height: 60px;
+	width: 60px;
+	background: url('Climacons.png') -165px -235px;
+	filter: invert(100%);
+}

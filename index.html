@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+	<link rel="stylesheet" type="text/css" href="style.css">
+	<title>Lab 2 - Weather App</title>
+</head>
+
+<body>
+	<nav onclick="changeUnit();"></nav>
+	<main>
+		<section class="widget">
+			<h2 id="current_location"></h2>
+			<div id="current_icon">
+				<div></div>
+				<h3 id="temperature"></h3> </div>
+			<h1 id="current_condition"></h1>
+			<div id="wind_humid">
+				<div id="wind">
+					<div id="wind_ico"></div>
+					<h3 id="wind_spe"></h3> </div>
+				<h3 id="humid"></h3> </div>
+			<section class="forecast_container">
+				<section class="card" id="0">
+					<div id="card_icon"></div>
+					<h3 id="day"></h3>
+					<h3 id="max"></h3>
+					<h3 id="min"></h3></section>
+				<section class="card" id="1">
+					<div id="card_icon"></div>
+					<h3 id="day"></h3>
+					<h3 id="max"></h3>
+					<h3 id="min"></h3></section>
+				<section class="card" id="2">
+					<div id="card_icon"></div>
+					<h3 id="day"></h3>
+					<h3 id="max"></h3>
+					<h3 id="min"></h3></section>
+				<section class="card" id="3">
+					<div id="card_icon"></div>
+					<h3 id="day"></h3>
+					<h3 id="max"></h3>
+					<h3 id="min"></h3></section>
+				<section class="card" id="4">
+					<div id="card_icon"></div>
+					<h3 id="day"></h3>
+					<h3 id="max"></h3>
+					<h3 id="min"></h3></section>
+			</section>
+			<section class="weather_graph"> </section>
+		</section>
+		<section style="overflow: auto;">
+			<p id="api_w"></p>
+			<p id="api_f"></p>
+		</section>
+	</main>
+	<script>
+		var api_key = '&APPID=0d1184a1753cca1d60f0194e44b3dfde';
+		var city = 'Toronto';
+		var units = '&units=metric';
+		var data;
+		var fore;
+		window.onload = load();
+
+		function load() {
+			var weather_call = 'http://api.openweathermap.org/data/2.5/weather?q=' + city + units + '&cnt=7' + api_key;
+			var forecast_call = 'http://api.openweathermap.org/data/2.5/forecast/daily?q=' + city + units + api_key;
+			ajax_get(weather_call, 1);
+			ajax_get(forecast_call, 0);
+		}
+
+		function ajax_get(file, b) {
+			var raw = new XMLHttpRequest();
+			raw.overrideMimeType("application/json");
+			raw.open("GET", file, true);
+			raw.onreadystatechange = function () {
+				if (raw.readyState === 4 && raw.status == "200") {
+					if (b == 1) {
+						data = JSON.parse(raw.responseText);
+						document.getElementById('api_w').innerHTML = JSON.stringify(data); // reload();
+						reload();
+					}
+					else {
+						fore = JSON.parse(raw.responseText);
+						reload_fore();
+					}
+				}
+			}
+			raw.send(null);
+		}
+		//		function ajax_get(file, callback) {
+		//			var raw = new XMLHttpRequest();
+		//			raw.overrideMimeType("application/json");
+		//			raw.open("GET", file, true);
+		//			raw.onreadystatechange = function () {
+		//				if (raw.readyState === 4 && raw.status == "200") {
+		//					callback(raw.responseText);
+		//				}
+		//			}
+		//			raw.send(null);
+		//		}
+		//		
+		//		function load() {
+		//			
+		//		}
+		////		ajax_get(weather_call, function (text) { // data = JSON.parse(text); // console.log(data); // document.getElementById('api_w').innerHTML = JSON.stringify(data); // reload(); // });
+		//		ajax_get(forecast_call, function (text) {
+		//			fore = JSON.parse(text);
+		//			console.log(fore);
+		//			document.getElementById('api_f').innerHTML = JSON.stringify(fore);
+		//			reload_fore();
+		//		});
+		function reload() {
+			//Current Location
+			var elem = document.getElementById('current_location');
+			elem.innerHTML = data['name'];
+			//Current Condition
+			elem = document.getElementById('current_condition');
+			var weather = data['weather'][0].main;
+			//Current Icon
+			elem.innerHTML = weather;
+			elem = document.getElementById('current_icon').childNodes[1];
+			icon(elem, weather);
+			//Current Temperature
+			elem = document.getElementById('temperature');
+			var temp = data['main']['temp'];
+			elem.innerHTML = temp.toFixed(2);
+			//Wind Speed and Humidity
+			elem = document.getElementById('wind_spe');
+			elem.innerHTML = data['wind']['speed'];
+			elem = document.getElementById('humid');
+			elem.innerHTML = data['main']['humidity'] + "%";
+		}
+
+		function reload_fore() {
+			for (var i = 0; i < 5; i++) {
+				var elem = document.getElementById(i);
+				var ico = elem.childNodes[1];
+				var day = elem.childNodes[3];
+				var max = elem.childNodes[5];
+				var min = elem.childNodes[7];
+				var f;
+				f = fore.list[i + 1];
+				icon(ico, f.weather[0].main);
+				day.innerHTML = getDate(f.dt);
+				max.innerHTML = f.temp.max.toFixed(2);
+				min.innerHTML = f.temp.min.toFixed(2);
+			}
+		}
+
+		function changeUnit() {
+			if (units == '&units=metric') {
+				units = '&units=imperial';
+			}
+			else {
+				units = '&units=metric';
+			}
+			console.log('click ' + units);
+			load();
+		}
+
+		function getDate(d) {
+			var date = new Date(0);
+			var day = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+			date.setUTCSeconds(d);
+			return day[date.getDay()];
+		}
+		//element, weather
+		function icon(elem, group) {
+			group = group.toLowerCase();
+			if (group == 'thunderstorm' || group == 'drizzle' || group == 'rain' || group == 'snow' || group == 'atmosphere' || group == 'clear' || group == 'clouds') {
+				elem.id = group;
+			}
+			else {
+				elem.id = 'misc';
+			}
+		}
+
+		function convert(temp) {
+			if (degree == 'c') {
+				temp = temp - 273.15;
+			}
+			else {
+				temp = (temp * 9 / 5) - 459.67;
+			}
+			return temp.toFixed(2);
+		}
+	</script>
+</body>
+
+</html>
