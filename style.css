@@ -8,6 +8,7 @@ body {
 	color: white;
 	height: 100%;
 	font-family: 'Arimo', sans-serif;
+	filter: brightness(150%);
 }
 
 h1,
@@ -115,6 +116,7 @@ section {
 	display: inline-block;
 	width: 22vw;
 	height: 100%;
+	border-right: 2px #dddddd solid;
 }
 
 .ci {
@@ -149,7 +151,7 @@ section {
 
 .weather_graph {
 	width: 100%;
-	height: 50vw;
+	height: 100%;
 }
 
 #thunderstorm {
@@ -211,14 +213,38 @@ section {
 
 /* Small Tablets */
 
-@media only screen and (min-width: 600px) {}
+@media only screen and (min-width: 600px) {
+	nav {
+		opacity: 1;
+	}
+	.card {
+		display: inline-block;
+		width: 28vw;
+		height: 100%;
+	}
+	.forecast_container {
+		width: 100%;
+		height: 40vw;
+		white-space: nowrap;
+		overflow-x: auto;
+		overflow-y: hidden;
+	}
+}
 
 
 /* Large Tablets */
 
-@media only screen and (min-width: 800px) {}
+@media only screen and (min-width: 800px) {
+	nav {
+		opacity: 0.5;
+	}
+}
 
 
 /* Non-Retina Laptops */
 
-@media screen and (min-width: 1200px) {}
+@media screen and (min-width: 1200px) {
+	nav {
+		opacity: 1;
+	}
+}

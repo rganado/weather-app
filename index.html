@@ -9,7 +9,7 @@
 	<title>Lab 2 - Weather App</title>
 </head>
 
-<body>
+<body onresize="load()">
 	<nav id="units" onclick="changeUnit();">Celsius</nav>
 	<main>
 		<section class="widget">
@@ -54,9 +54,8 @@
 					<h3 id="min"></h3></section>
 			</section>
 			<section class="weather_graph">
-				<h3>Hourly Forecast (per 3 hours)</h3>
-				<canvas id="linegraph"></canvas>
-			</section>
+				<h3>Hourly Forecast (per 3 hours)</h3> </section>
+			<canvas id="linegraph" width="500" height="300">Browser does not support HTML5 Canvas</canvas>
 		</section>
 	</main>
 	<script>
@@ -66,6 +65,8 @@
 		var data;
 		var fore;
 		var hourly;
+		var canW;
+		var canH;
 		window.onload = load();
 
 		function load() {
@@ -146,58 +147,96 @@
 		}
 
 		function reload_hour() {
-			var arrx = [" "];
+			var arrx = [];
 			var arry = [];
 			var size = 45;
 			var max;
 			var min;
 			var sect;
-			var step = 1;
+			var step = 10;
 			for (var i = 0; i < hourly.list.length; i++) {
 				var h = getHour(hourly.list[i].dt);
 				if (h > 12) {
 					h = h - 12;
 				}
 				arrx.push(h);
+				arrx.push(i + 1);
 				arry.push(hourly.list[i].main.temp);
 			}
 			max = Math.floor(Math.max(...arry));
 			min = Math.floor(Math.min(...arry));
+			var z = '0';
 			console.log(max);
 			console.log(min);
 			canvas = document.getElementById("linegraph");
 			canvas.width = window.outerWidth;
-			canvas.height = 100;
+			canvas.height = 400;
 			context = canvas.getContext("2d");
-			sect = arrx.length;
-			yS = (canvas.height - size) / (max - min);
-			xS = (canvas.width - size) / sect;
-			context.strokeStyle = "#dddddd";
+			if (max > 30) {
+				step = step / 2;
+			}
+			var zero;
+			if (min <= 0) {
+				zero = (canvas.height - 50) - (step * Math.abs(min));
+			}
+			else {
+				zero = (canvas.height - 50);
+			}
+			/* y axis */
 			context.beginPath();
-			context.setLineDash([5, 10]);
-			context.font = '10pt Verdana';
-			context.fillStyle = "#dddddd";
-			context.fillText(min, 5, canvas.height);
-			context.moveTo(30, canvas.height);
-			context.lineTo(canvas.width - 10, canvas.height);
+			context.strokeStyle = 'rgba(0,0,0,0.2)';
+			context.moveTo(0 + 50, 0);
+			context.lineTo(0 + 50, canvas.height);
 			context.stroke();
-			context.translate(size - 15, canvas.height + min * yS);
-			context.scale(1, -1 * yS);
-			//context.scale(1, 2);
-			plot(arry, sect);
+			/* x axis */
+			context.moveTo(0 + 50, zero);
+			context.lineTo(canvas.width - 50, zero);
+			context.stroke();
+			context.closePath();
+			/* data lines */
+			for (var i = step; i < canvas.height; i += step) {
+				context.beginPath();
+				context.strokeStyle = 'rgba(0,0,0,0.4)';
+				context.moveTo(40, i);
+				context.lineTo(50, i);
+				context.stroke();
+				context.closePath();
+			}
+			context.font = '20pt Arimo';
+			context.fillStyle = 'rgba(0,0,0,0.4)';
+			context.fillText(z, 25, zero + step);
+			/* plot data */
+			//context.beginPath();
+			for (var i = 0; i < arry.length; i++) {
+				context.beginPath();
+				context.strokeStyle = 'white';
+				context.lineWidth = 1;
+				context.moveTo(50 + (((canvas.width - 100) / hourly.list.length) * (i + 1)), zero);
+				context.lineTo(50 + (((canvas.width - 100) / hourly.list.length) * (i + 1)), zero + (arry[i] * -step));
+				context.stroke();
+				context.closePath();
+				context.beginPath();
+				context.arc(50 + (((canvas.width - 100) / hourly.list.length) * (i + 1)), zero + (arry[i] * -step), 5, 0, 2 * Math.PI);
+				context.closePath();
+				context.fillStyle = 'white';
+				context.fill();
+				context.lineWidth = 2;
+				context.strokeStyle = 'black';
+				context.stroke();
+				context.fillStyle = 'white';
+				context.font = '10pt Arimo';
+				context.textAlign = 'center';
+				if (zero + (arry[i] * -step) > zero) {
+					console.log('less');
+					context.fillText(Math.abs(arry[i].toFixed(0)), 50 + (((canvas.width - 100) / hourly.list.length) * (i + 1)), zero + (arry[i] * -step) + 18, 10);
+				}
+				else {
+					console.log('more');
+					context.fillText(Math.abs(arry[i].toFixed(0)), 50 + (((canvas.width - 100) / hourly.list.length) * (i + 1)), zero + (arry[i] * -step) - 18, 10);
+				}
+			}
 			console.log('complete');
 			console.log(arry);
-		}
-
-		function plot(d, s) {
-			context.beginPath();
-			context.setLineDash([]);
-			context.strokeStyle = "#ffffff";
-			context.moveTo(0, d[0]);
-			for (var i = 1; i < s; i++) {
-				context.lineTo(i * xS, d[i]);
-			}
-			context.stroke();
 		}
 
 		function changeUnit() {
