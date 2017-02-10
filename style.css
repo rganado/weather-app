@@ -210,6 +210,10 @@ section {
 	filter: invert(100%);
 }
 
+canvas {
+	margin-bottom: 5vw;
+}
+
 
 /* Small Tablets */
 
@@ -218,9 +222,7 @@ section {
 		opacity: 1;
 	}
 	.card {
-		display: inline-block;
 		width: 28vw;
-		height: 100%;
 	}
 	.forecast_container {
 		width: 100%;
@@ -237,6 +239,23 @@ section {
 @media only screen and (min-width: 800px) {
 	nav {
 		opacity: 0.5;
+		padding: 1vw;
+	}
+	#current_location {
+		font-size: 35pt;
+	}
+	#temperature {
+		font-size: 45pt;
+	}
+	.card {
+		width: 20vw;
+	}
+	.forecast_container {
+		overflow-x: hidden;
+		height: 30vw;
+	}
+	.card:nth-child(5) {
+		border: none;
 	}
 }
 
@@ -246,5 +265,24 @@ section {
 @media screen and (min-width: 1200px) {
 	nav {
 		opacity: 1;
+	}
+	.widget {
+		margin-top: 1vw;
+	}
+	#current_location {
+		margin-bottom: 1vw;
+		font-size: 45pt;
+	}
+	#temperature {
+		font-size: 50pt;
+	}
+	.forecast_container {
+		height: 25vw;
+	}
+	#card_icon,
+	#day,
+	#max,
+	#min {
+		margin: 2vw;
 	}
 }

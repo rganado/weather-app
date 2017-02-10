@@ -58,6 +58,8 @@
 			<canvas id="linegraph" width="500" height="300">Browser does not support HTML5 Canvas</canvas>
 		</section>
 	</main>
+	<footer>
+		<h3>Rofel Ganado - 500589501</h3> </footer>
 	<script>
 		var api_key = '&APPID=0d1184a1753cca1d60f0194e44b3dfde';
 		var city = 'Toronto';
@@ -168,9 +170,10 @@
 			var z = '0';
 			console.log(max);
 			console.log(min);
+			/* Draw Canvas Line Graph*/
 			canvas = document.getElementById("linegraph");
 			canvas.width = window.outerWidth;
-			canvas.height = 400;
+			canvas.height = window.outerHeight / 2;
 			context = canvas.getContext("2d");
 			if (max > 30) {
 				step = step / 2;
@@ -204,9 +207,15 @@
 			}
 			context.font = '20pt Arimo';
 			context.fillStyle = 'rgba(0,0,0,0.4)';
-			context.fillText(z, 25, zero + step);
-			/* plot data */
-			//context.beginPath();
+			if (zero > 0) {
+				console.log('here');
+				console.log(zero + step);
+				context.fillText(z, 25, zero + step);
+			}
+			else {
+				console.log('there');
+				context.fillText(z, 25, 20);
+			}
 			for (var i = 0; i < arry.length; i++) {
 				context.beginPath();
 				context.strokeStyle = 'white';
@@ -228,11 +237,11 @@
 				context.textAlign = 'center';
 				if (zero + (arry[i] * -step) > zero) {
 					console.log('less');
-					context.fillText(Math.abs(arry[i].toFixed(0)), 50 + (((canvas.width - 100) / hourly.list.length) * (i + 1)), zero + (arry[i] * -step) + 18, 10);
+					context.fillText(arry[i].toFixed(0) + '°', 50 + (((canvas.width - 100) / hourly.list.length) * (i + 1)), zero + (arry[i] * -step) + 18, 20);
 				}
 				else {
 					console.log('more');
-					context.fillText(Math.abs(arry[i].toFixed(0)), 50 + (((canvas.width - 100) / hourly.list.length) * (i + 1)), zero + (arry[i] * -step) - 18, 10);
+					context.fillText(arry[i].toFixed(0) + '°', 50 + (((canvas.width - 100) / hourly.list.length) * (i + 1)), zero + (arry[i] * -step) - 18, 20);
 				}
 			}
 			console.log('complete');
